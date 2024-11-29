@@ -13,7 +13,7 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(var.cluster_ca_certificate)
 
   # For development/testing only
-  tls_insecure_skip_verify = true
+  insecure = true
 }
 
 variable "host" {
@@ -36,4 +36,4 @@ resource "kubernetes_namespace" "app_namespace" {
   metadata {
     name = "next-app"
   }
-} 
+}
