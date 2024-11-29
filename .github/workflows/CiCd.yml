@@ -1,24 +1,14 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - master
-      - main
+    branches: [ master ]
   pull_request:
-    branches:
-      - master
-      - main
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+    branches: [ master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     
@@ -39,3 +29,31 @@ jobs:
       run: npm run build
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Terraform
+      uses: hashicorp/setup-terraform@v2
+
+    - name: Terraform Init
+      run: |
+        cd terraform
+        terraform init
+
+    - name: Terraform Apply
+      run: |
+        cd terraform
+        terraform apply -auto-approve
+
+    - name: Install Helm
+      uses: azure/setup-helm@v3
+
+    - name: Deploy to Kubernetes
+      run: |
+        helm upgrade --install next-app ./helm/next-app \
+          --namespace next-app \
+          --create-namespace
