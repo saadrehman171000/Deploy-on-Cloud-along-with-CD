@@ -21,7 +21,6 @@ jobs:
         kubectl config view
         kubectl config current-context
         
-    # Add the service account creation here, before Terraform steps
     - name: Create Service Account
       run: |
         kubectl create serviceaccount terraform-sa || true
@@ -31,9 +30,9 @@ jobs:
 
     - name: Get Kubernetes Credentials
       run: |
-        echo "KUBE_HOST=$(kubectl config view --minify --flatten -o jsonpath='{.clusters[0].cluster.server}')" >> $GITHUB_ENV
-        echo "KUBE_CA_CERT=$(kubectl config view --minify --flatten --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')" >> $GITHUB_ENV
-        echo "KUBE_TOKEN=$(kubectl create token default -n default)" >> $GITHUB_ENV
+        echo "KUBE_HOST=$(minikube ip)" >> $GITHUB_ENV
+        echo "KUBE_CA_CERT=$(kubectl config view --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')" >> $GITHUB_ENV
+        echo "KUBE_TOKEN=$(kubectl create token terraform-sa -n default)" >> $GITHUB_ENV
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
@@ -43,6 +42,6 @@ jobs:
         cd terraform
         terraform init
         terraform apply -auto-approve \
-          -var="host=${KUBE_HOST}" \
+          -var="host=https://${KUBE_HOST}:8443" \
           -var="token=${KUBE_TOKEN}" \
           -var="cluster_ca_certificate=${KUBE_CA_CERT}"
