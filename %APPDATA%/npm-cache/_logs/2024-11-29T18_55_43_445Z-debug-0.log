@@ -1,0 +1,49 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.8.1
+2 info using node@v22.3.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\saadr\Desktop\Deploy on Cloud along with CD\.npmrc
+5 silly config load:file:C:\Users\saadr\.npmrc
+6 silly config load:file:C:\Users\saadr\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm install @prisma/adapter-postgresql
+8 verbose argv "install" "@prisma/adapter-postgresql"
+9 verbose logfile logs-max:10 dir:C:\Users\saadr\Desktop\Deploy on Cloud along with CD\%APPDATA%\npm-cache\_logs\2024-11-29T18_55_43_445Z-
+10 verbose logfile C:\Users\saadr\Desktop\Deploy on Cloud along with CD\%APPDATA%\npm-cache\_logs\2024-11-29T18_55_43_445Z-debug-0.log
+11 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+12 silly logfile start cleaning logs, removing 1 files
+13 silly logfile done cleaning log files
+14 silly idealTree buildDeps
+15 silly fetch manifest @prisma/adapter-postgresql@*
+16 silly packumentCache full:https://registry.npmjs.org/@prisma%2fadapter-postgresql cache-miss
+17 verbose shrinkwrap failed to load node_modules/.package-lock.json out of date, updated: node_modules
+18 http fetch GET 404 https://registry.npmjs.org/@prisma%2fadapter-postgresql 1451ms (cache skip)
+19 silly placeDep ROOT @prisma/adapter-postgresql@ OK for: textile-plm-digitalisation@0.1.0 want: *
+20 verbose stack HttpErrorGeneral: 404 Not Found - GET https://registry.npmjs.org/@prisma%2fadapter-postgresql - Not found
+20 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-fetch\lib\check-response.js:95:15
+20 verbose stack     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+20 verbose stack     at async RegistryFetcher.packument (C:\Program Files\nodejs\node_modules\npm\node_modules\pacote\lib\registry.js:90:19)
+20 verbose stack     at async RegistryFetcher.manifest (C:\Program Files\nodejs\node_modules\npm\node_modules\pacote\lib\registry.js:128:23)
+20 verbose stack     at async #fetchManifest (C:\Program Files\nodejs\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\build-ideal-tree.js:1199:20)
+20 verbose stack     at async #nodeFromEdge (C:\Program Files\nodejs\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\build-ideal-tree.js:1037:19)
+20 verbose stack     at async #buildDepStep (C:\Program Files\nodejs\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\build-ideal-tree.js:901:11)
+20 verbose stack     at async Arborist.buildIdealTree (C:\Program Files\nodejs\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\build-ideal-tree.js:181:7)
+20 verbose stack     at async Promise.all (index 1)
+20 verbose stack     at async Arborist.reify (C:\Program Files\nodejs\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\reify.js:131:5)
+21 verbose statusCode 404
+22 verbose pkgid @prisma/adapter-postgresql@*
+23 error code E404
+24 error 404 Not Found - GET https://registry.npmjs.org/@prisma%2fadapter-postgresql - Not found
+25 error 404
+26 error 404  '@prisma/adapter-postgresql@*' is not in this registry.
+27 error 404
+28 error 404 Note that you can also install from a
+29 error 404 tarball, folder, http url, or git url.
+30 silly unfinished npm timer reify 1732906544146
+31 silly unfinished npm timer reify:loadTrees 1732906544152
+32 verbose cwd C:\Users\saadr\Desktop\Deploy on Cloud along with CD
+33 verbose os Windows_NT 10.0.22631
+34 verbose node v22.3.0
+35 verbose npm  v10.8.1
+36 verbose exit 1
+37 verbose code 1
+38 error A complete log of this run can be found in: C:\Users\saadr\Desktop\Deploy on Cloud along with CD\%APPDATA%\npm-cache\_logs\2024-11-29T18_55_43_445Z-debug-0.log

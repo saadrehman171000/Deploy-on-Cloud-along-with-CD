@@ -2,16 +2,16 @@
 1 info using npm@10.8.1
 2 info using node@v22.3.0
 3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
-4 silly config load:file:E:\Saad Rehman-GitHub\DevOps-Pipeline-Automation\.npmrc
+4 silly config load:file:C:\Users\saadr\Desktop\Deploy on Cloud along with CD\.npmrc
 5 silly config load:file:C:\Users\saadr\.npmrc
 6 silly config load:file:C:\Users\saadr\AppData\Roaming\npm\etc\npmrc
-7 verbose title npm exec eslint . --fix
-8 verbose argv "exec" "--" "eslint" "." "--fix"
-9 verbose logfile logs-max:10 dir:E:\Saad Rehman-GitHub\DevOps-Pipeline-Automation\%APPDATA%\npm-cache\_logs\2024-10-28T19_22_24_683Z-
-10 verbose logfile E:\Saad Rehman-GitHub\DevOps-Pipeline-Automation\%APPDATA%\npm-cache\_logs\2024-10-28T19_22_24_683Z-debug-0.log
+7 verbose title npm exec prisma generate
+8 verbose argv "exec" "--" "prisma" "generate"
+9 verbose logfile logs-max:10 dir:C:\Users\saadr\Desktop\Deploy on Cloud along with CD\%APPDATA%\npm-cache\_logs\2024-11-29T18_57_34_875Z-
+10 verbose logfile C:\Users\saadr\Desktop\Deploy on Cloud along with CD\%APPDATA%\npm-cache\_logs\2024-11-29T18_57_34_875Z-debug-0.log
 11 silly logfile start cleaning logs, removing 1 files
 12 silly logfile done cleaning log files
-13 verbose cwd E:\Saad Rehman-GitHub\DevOps-Pipeline-Automation
+13 verbose cwd C:\Users\saadr\Desktop\Deploy on Cloud along with CD
 14 verbose os Windows_NT 10.0.22631
 15 verbose node v22.3.0
 16 verbose npm  v10.8.1
