@@ -15,25 +15,28 @@ jobs:
     - name: Set up Minikube
       uses: medyagh/setup-minikube@master
 
-    - name: Get Kubernetes Config
-      id: kubeconfig
+    - name: Configure kubectl
       run: |
-        echo "KUBE_HOST=$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}')" >> $GITHUB_ENV
-        echo "KUBE_CA_CERT=$(kubectl config view --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')" >> $GITHUB_ENV
-        echo "KUBE_CLIENT_CERT=$(kubectl config view --raw -o jsonpath='{.users[0].user.client-certificate-data}')" >> $GITHUB_ENV
-        echo "KUBE_CLIENT_KEY=$(kubectl config view --raw -o jsonpath='{.users[0].user.client-key-data}')" >> $GITHUB_ENV
+        minikube status
+        kubectl config view
+        kubectl config current-context
+        
+    # Add the service account creation here, before Terraform steps
+    - name: Create Service Account
+      run: |
+        kubectl create serviceaccount terraform-sa || true
+        kubectl create clusterrolebinding terraform-sa-binding \
+          --clusterrole=cluster-admin \
+          --serviceaccount=default:terraform-sa || true
+
+    - name: Get Kubernetes Credentials
+      run: |
+        echo "KUBE_HOST=$(kubectl config view --minify --flatten -o jsonpath='{.clusters[0].cluster.server}')" >> $GITHUB_ENV
+        echo "KUBE_CA_CERT=$(kubectl config view --minify --flatten --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')" >> $GITHUB_ENV
+        echo "KUBE_TOKEN=$(kubectl create token default -n default)" >> $GITHUB_ENV
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
-
-    - name: Debug Kubernetes Config
-      run: |
-        echo "Host: $KUBE_HOST"
-        echo "Has CA Cert: ${{ env.KUBE_CA_CERT != '' }}"
-        echo "Has Client Cert: ${{ env.KUBE_CLIENT_CERT != '' }}"
-        echo "Has Client Key: ${{ env.KUBE_CLIENT_KEY != '' }}"
-        kubectl cluster-info
-        kubectl get nodes
 
     - name: Terraform Init and Apply
       run: |
@@ -41,15 +44,5 @@ jobs:
         terraform init
         terraform apply -auto-approve \
           -var="host=${KUBE_HOST}" \
-          -var="cluster_ca_certificate=${KUBE_CA_CERT}" \
-          -var="client_certificate=${KUBE_CLIENT_CERT}" \
-          -var="client_key=${KUBE_CLIENT_KEY}"
-
-    - name: Install Helm
-      uses: azure/setup-helm@v3
-
-    - name: Deploy with Helm
-      run: |
-        helm upgrade --install next-app ./helm/next-app \
-          --namespace next-app \
-          --create-namespace
+          -var="token=${KUBE_TOKEN}" \
+          -var="cluster_ca_certificate=${KUBE_CA_CERT}"

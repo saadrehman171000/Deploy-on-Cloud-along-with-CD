@@ -9,23 +9,20 @@ terraform {
 
 provider "kubernetes" {
   host = var.host
-
-  client_certificate     = base64decode(var.client_certificate)
-  client_key            = base64decode(var.client_key)
+  token = var.token
   cluster_ca_certificate = base64decode(var.cluster_ca_certificate)
-  insecure              = true  # Only for testing
+
+  # For development/testing only
+  insecure = true
 }
 
 variable "host" {
   type = string
 }
 
-variable "client_certificate" {
+variable "token" {
   type = string
-}
-
-variable "client_key" {
-  type = string
+  sensitive = true
 }
 
 variable "cluster_ca_certificate" {
