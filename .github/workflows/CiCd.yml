@@ -12,41 +12,31 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        
-    - name: Install Dependencies
-      run: npm install
-      
-    - name: Generate Prisma Client
-      run: npx prisma generate
-      env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      
-    - name: Build
-      run: npm run build
-      env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
     - name: Set up Minikube
       uses: medyagh/setup-minikube@master
 
-    - name: Install Terraform
-      uses: hashicorp/setup-terraform@v2
-
-    - name: Configure kubectl
+    - name: Get Kubernetes Config
+      id: kubeconfig
       run: |
-        minikube status
-        kubectl config view
-        kubectl config current-context
+        echo "KUBE_HOST=$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}')" >> $GITHUB_ENV
+        echo "KUBE_CERT=$(kubectl config view --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')" >> $GITHUB_ENV
+        echo "KUBE_CLIENT_CERT=$(kubectl config view --raw -o jsonpath='{.users[0].user.client-certificate-data}')" >> $GITHUB_ENV
+        echo "KUBE_CLIENT_KEY=$(kubectl config view --raw -o jsonpath='{.users[0].user.client-key-data}')" >> $GITHUB_ENV
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
 
     - name: Terraform Init and Apply
       run: |
         cd terraform
         terraform init
-        terraform apply -auto-approve
+        terraform apply -auto-approve \
+          -var="host=${{ env.KUBE_HOST }}" \
+          -var="cluster_ca_certificate=${{ env.KUBE_CERT }}" \
+          -var="client_certificate=${{ env.KUBE_CLIENT_CERT }}" \
+          -var="client_key=${{ env.KUBE_CLIENT_KEY }}"
+      env:
+        TF_LOG: DEBUG
 
     - name: Install Helm
       uses: azure/setup-helm@v3
