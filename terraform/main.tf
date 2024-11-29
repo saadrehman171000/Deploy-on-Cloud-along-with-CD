@@ -8,8 +8,9 @@ terraform {
 }
 
 provider "kubernetes" {
-  config_path    = "~/.kube/config"
-  config_context = "minikube"
+  config_context_cluster = "minikube"
+  host = "https://kubernetes.default.svc"
+  insecure = true
 }
 
 resource "kubernetes_namespace" "app_namespace" {

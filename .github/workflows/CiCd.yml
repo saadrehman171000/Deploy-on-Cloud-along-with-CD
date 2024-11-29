@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -30,29 +30,28 @@ jobs:
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
+    - name: Set up Minikube
+      uses: medyagh/setup-minikube@master
 
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v2
 
-    - name: Terraform Init
+    - name: Configure kubectl
+      run: |
+        minikube status
+        kubectl config view
+        kubectl config current-context
+
+    - name: Terraform Init and Apply
       run: |
         cd terraform
         terraform init
-
-    - name: Terraform Apply
-      run: |
-        cd terraform
         terraform apply -auto-approve
 
     - name: Install Helm
       uses: azure/setup-helm@v3
 
-    - name: Deploy to Kubernetes
+    - name: Deploy with Helm
       run: |
         helm upgrade --install next-app ./helm/next-app \
           --namespace next-app \
