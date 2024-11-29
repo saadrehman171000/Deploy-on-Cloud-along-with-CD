@@ -9,7 +9,7 @@ on:
       - main  # Trigger on pull requests to the main branch
 
 jobs:
-  # 1. Build Docker Images for Components
+  # 1. Buuild Docker Images for Components
   build:
     runs-on: ubuntu-latest
     steps:
