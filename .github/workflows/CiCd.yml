@@ -12,6 +12,21 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
+    # Docker steps
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: saadrehman17100/textile-plm-digitalisation:${{ github.sha }}
+
+    # Minikube and Terraform steps
     - name: Set up Minikube
       uses: medyagh/setup-minikube@master
 
@@ -45,3 +60,17 @@ jobs:
           -var="host=https://${KUBE_HOST}:8443" \
           -var="token=${KUBE_TOKEN}" \
           -var="cluster_ca_certificate=${KUBE_CA_CERT}"
+
+    # Helm deployment steps
+    - name: Create Secret
+      run: |
+        kubectl create secret generic app-secrets \
+          --from-literal=database-url=${{ secrets.DATABASE_URL }} \
+          -n next-app --dry-run=client -o yaml | kubectl apply -f -
+
+    - name: Deploy with Helm
+      run: |
+        helm upgrade --install next-app ./helm/next-app \
+          --namespace next-app \
+          --set image.tag=${{ github.sha }} \
+          --create-namespace

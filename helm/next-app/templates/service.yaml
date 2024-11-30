@@ -1,15 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "next-app.fullname" . }}
-  labels:
-    {{- include "next-app.labels" . | nindent 4 }}
+  name: {{ .Release.Name }}-service
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+  - port: {{ .Values.service.port }}
+    targetPort: 3000
   selector:
-    {{- include "next-app.selectorLabels" . | nindent 4 }}
+    app: next-app
